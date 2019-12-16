@@ -1,0 +1,24 @@
+Declare Function CreateIScriptURL PeopleCode WEBLIB_QUERY.QRYGENFUNCS FieldFormula;
+
+Local string &fileName, &filePath;
+
+&fileName = "output_" | %UserId | "_" | %Date | "_" | %Time | ".xlsx";
+&filePath = "/share/pstest/";
+
+/* create and open the spreadsheet object */
+Local object &ss;
+&ss = CreateObject("PSSpreadsheet");
+&ss.Open(&filePath | &fileName, True);
+
+/* load data using rowset */
+Local Rowset &rs = CreateRowset(Record.RECORD_NAME);
+&rs.Fill("where 1=1");
+
+/* save spreadsheet */
+&ss.SetRowSetData(&rs);
+&ss.Save();
+
+/* iscript grabs file from server and displays it */
+&iscriptURL = GetURL(RECORD_NAME.ISCRIPT1.FieldFormula.IScript_GetExcelFile) | "/?fileName=" | &filePath | &fileName;
+ViewContentURL(EncodeURL(CreateIScriptURL(&iscriptURL)));
+

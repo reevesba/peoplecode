@@ -1,0 +1,36 @@
+Function IScript_GetExcelFile();
+   Local string &sTempString;
+   
+   Local string &fileName = %Request.GetParameter("fileName");
+   
+   If %Response.CharSet = "UTF-8" Then
+      %Response.Write("<head><meta http-equiv=""content-type"" content=""text/html;charset=UTF-8"" />");
+   End-If;
+   %Response.Write("<title>" | "Title" | "</title>");
+   %Response.Write("<STYLE type=""text/css"">");
+   %Response.Write("h3.ss { text-align: center}  </STYLE></head>");
+   
+   try
+      Local object &ss;
+      &ss = CreateObject("PSSpreadsheet");
+      &ss.Open(&fileName, False);
+   catch Exception &e
+      Error (MsgGetText(&e.MessageSetNumber, &e.MessageNumber, "Message Not Found %1", &fileName));
+   end-try;
+   
+   try
+      %Response.WriteBinary(&ss.GetFileContent(&fileName));
+   catch Exception &e1
+      Error (MsgGetText(&e1.MessageSetNumber, &e1.MessageNumber, "Message Not Found %1", &fileName));
+   end-try;
+   
+   %Response.SetContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;");
+   Local array of string &arrTemp = Split(&fileName, "\");
+   Local integer &arrLen = &arrTemp.Len;
+   
+   &sTempString = "attachment; filename=" | &arrTemp [&arrLen];
+   %Response.SetHeader("Content-Disposition", &sTempString);
+   
+   Return;
+   
+End-Function;
