@@ -1,0 +1,13 @@
+/* using field class property */
+If &flg Then
+        &rs(&currentRow).GetRecord(@("Record." | &rec)).GetField(@("Field." | &fld)).FreeFormStyleName = "psc_error";
+Else
+        &rs(&currentRow).GetRecord(@("Record." | &rec)).GetField(@("Field." | &fld)).FreeFormStyleName = "";
+End-If;
+
+/* using field class methods */
+If &flg Then
+	&rs(&currentRow).GetRecord(@("Record." | &rec)).GetField(@("Field." | &fld)).AddFFClass("psc_error");
+Else
+	&rs(&currentRow).GetRecord(@("Record." | &rec)).GetField(@("Field." | &fld)).ReplaceFFClass("psc_error", "");
+End-If;
