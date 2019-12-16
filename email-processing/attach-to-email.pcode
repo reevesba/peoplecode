@@ -1,0 +1,31 @@
+/* move attachments to application server from database */
+&ret = GetAttachment(URL.YOUR_URL, "testFile.pdf", "/tmp/testFile.pdf");
+
+Evaluate &ret
+When 1
+   MessageBox(0, "", 0, 0, "File transfer failed due to unspecified error.");
+   Break;
+When 3
+   MessageBox(0, "", 0, 0, "File transfer failed due to unspecified error during FTP attempt.");
+   Break;
+When 4
+   MessageBox(0, "", 0, 0, "No disk space on the application server.");
+   Break;
+When 7
+   MessageBox(0, "", 0, 0, "Cannot locate destination system for FTP.");
+   Break;
+When 8
+   MessageBox(0, "", 0, 0, "Unable to login to destination system for FTP.");
+   Break;
+When 9
+   MessageBox(0, "", 0, 0, "Cannot locate file.");
+End-Evaluate;
+
+/* send email (deprecated, use MCFOutboundEmail class instead) */
+&ret = SendMail(0, "test@example.com", "", "", "Test Subject", "Test body.", "/tmp/testFile.pdf", "Attachment");
+
+If &ret = 0 Then
+   MessageBox(0, "", 0, 0, "Message Sent.");
+Else
+   MessageBox(0, "", 0, 0, "No mail interface installed.");
+End-If;
