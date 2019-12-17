@@ -1,0 +1,3 @@
+Local Record &wrk = GetRecord(Record.RECORD_NAME);
+
+&wrk.HTMLAREA.Value = GetHTMLText(HTML.JAVASCRIPT_NAME);
