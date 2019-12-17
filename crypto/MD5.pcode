@@ -1,0 +1,11 @@
+/* generate MD5 hash */
+Local string &text1, &text2, &hash;
+Local JavaObject &text, &hex, &MD5;
+
+&text1 = "value1";
+&text2 = "value2";
+
+&text = CreateJavaObject("java.lang.String", &text1 | &text2);
+&hex = GetJavaClass("javax.xml.bind.DatatypeConverter");
+&MD5 = GetJavaClass("java.security.MessageDigest").getInstance("MD5");
+&hash = Lower(&hex.printHexBinary(&MD5.digest(&text.getBytes("CP1252"))));
