@@ -1,0 +1,20 @@
+/* find non-alpha characters */
+Local string &value = "testing-regul4r-expr355ions,!";
+Local string &newValue;
+Local string &pattern = "[^a-zA-Z]";
+Local boolean &caseSensitive = False;
+Local boolean &ret;
+
+/* method one: using java */
+Local JavaObject &patternClass = GetJavaClass("java.util.regex.Pattern");
+Local JavaObject &pattern = &patternClass.compile(&pattern);
+Local JavaObject &jstring = CreateJavaObject("java.lang.String", &value);
+Local JavaObject &matches = &pattern.matcher(&jstring.subSequence(0, &jstring.length()));
+
+&ret = &matches.matches()
+
+/* method two: using DBPatternMatch */
+&ret = DBPatternMatch(&value, &pattern, &caseSensitive)
+
+/* method three: using SQLExec (find and strip non-alpha characters) */
+SQLExec("SELECT COALESCE(REGEXP_REPLACE(:1, :2, ''), ' ') FROM DUAL", &value, &pattern, &newValue);
